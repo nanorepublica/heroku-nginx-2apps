@@ -100,3 +100,54 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(pathname)s:%(lineno)d %(message)s'
+        },
+        'founders': {
+            'format': '[%(levelname)s (%(process)d::%(thread)d) %(name)s] %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'founders',
+        },
+        'founders': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['founders'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'world': {
+            'handlers': ['founders', 'console'],
+            'level': os.environ.get('WEB_LOGLEVEL', 'DEBUG').upper(),
+            'propagate': False
+        }
+    }
+}

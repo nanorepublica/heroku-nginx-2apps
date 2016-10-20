@@ -16,3 +16,6 @@ This has to `server` directives with differing server_name
 1. https://github.com/heroku/heroku-buildpack-nginx.git
 2. heroku/python
 
+## Procfile
+
+This contains one web process, which backgrounds the first process, then runs the second app server
